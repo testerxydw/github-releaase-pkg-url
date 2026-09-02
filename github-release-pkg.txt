@@ -1,2 +1,3 @@
 https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-8/com.xydw.workbuddy_5.4.7-8_amd64.deb
 https://github.com/testerxydw/traework-win-to-linux/releases/download/v0.1.58-13/trae-solo-cn_0.1.58-13_amd64.deb
+https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-10/com.xydw.workbuddy_5.4.7-10_amd64.deb
