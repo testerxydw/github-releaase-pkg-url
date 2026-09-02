@@ -49,7 +49,6 @@ sudo apt-get install -f   # 若提示缺少运行时依赖，自动补齐
 
 | 版本 | 安装包 | 下载地址 |
 | --- | --- | --- |
-| `5.4.7-8` | `com.xydw.workbuddy_5.4.7-8_amd64.deb` | <https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-8/com.xydw.workbuddy_5.4.7-8_amd64.deb> |
 | `5.4.7-10` | `com.xydw.workbuddy_5.4.7-10_amd64.deb` | <https://github.com/testerxydw/github-releaase-pkg-url/releases/download/2026-09-02/com.xydw.workbuddy_5.4.7-10_amd64.deb> |
 
 ---
