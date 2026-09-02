@@ -1,36 +1,25 @@
 # github-releaase-pkg-url
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+This repository collects two Linux repackaged `.deb` installers published via GitHub Releases, with a download index and repackaging notes.
 
-#### Software Architecture
-Software architecture description
+## Packages
 
-#### Installation
+- **Trae SOLO CN** (ByteDance AI-native IDE) `trae-solo-cn_0.1.58-13_amd64.deb`
+- **WorkBuddy CN** (Tencent CodeBuddy AI workstation · Linux repack) `com.xydw.workbuddy_5.4.7-10_amd64.deb`
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+## Download
 
-#### Instructions
+Published together on GitHub Releases:
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+- <https://github.com/testerxydw/github-releaase-pkg-url/releases/tag/2026-09-02>
 
-#### Contribution
+## Details
 
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+Product intro, repackaging approach, key fixes and install steps: see [`github-release-pkg.md`](github-release-pkg.md).
 
+## Install
 
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```bash
+sudo dpkg -i <package>.deb
+sudo apt-get install -f   # auto-resolve missing runtime dependencies
+```
