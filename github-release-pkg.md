@@ -4,38 +4,53 @@
 
 ---
 
-## 1. WorkBuddy for Linux（腾讯 AI 智能体 · 非官方移植版）
+## 1. WorkBuddy CN（腾讯 CodeBuddy AI 编程工作台 · Linux 重打包版）
 
 - **包名**：`com.xydw.workbuddy`
-- **版本**：`5.4.7-8`
 - **架构**：`amd64`
-- **安装包**：`com.xydw.workbuddy_5.4.7-8_amd64.deb`
-- **下载地址**：<https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-8/com.xydw.workbuddy_5.4.7-8_amd64.deb>
+- **适用系统**：Deepin 23 / UOS v25 / Debian 12+（amd64）
+- **产品**：腾讯 CodeBuddy 的 AI 编程工作台（`codebuddy` / `cbc-prewarm`，UI 为 Electron 工作台）
 
 ### 产品简介
 
-**WorkBuddy** 是腾讯云推出的全场景 AI 智能体（AI Agent）产品，被业界戏称为"腾讯版小龙虾"，基于开源项目 **OpenClaw** 同源技术打造。它的核心定位是"行动式 AI"——不只是给出建议，而是直接帮你**执行**完整的工作流，从"感知 → 规划 → 执行 → 交付"形成闭环。
+**WorkBuddy** 是腾讯 **CodeBuddy** 的 AI 编程工作台产品，提供 AI Agent、智能编程辅助、工作台多模态创作等能力。官方仅发布 Windows / macOS 安装包，**无官方 Linux 版**。
 
-官方 Linux 版目前尚未公开发布（仅限部分体制内使用），因此本包为**社区移植版**（基于官方 macOS 版 DMG 转换为 Electron 应用）。
+本 `.deb` 包为**非官方重打包版**：拆解官方 **Windows NSIS 安装包**（`WorkBuddy-win32-x64-user-5.4.7.exe`），保留跨平台的 JS 资源层（`app.asar` / `app.asar.unpacked`），替换为 Linux 平台的 Electron 运行时与原生二进制后重新打包，使其可在 Deepin / UOS / Debian 系 Linux 上运行。仅供学习交流使用。
 
-### 主要功能
+### 转制原理
 
-- **仅问答/计划模式**：无需读取本地文件即可回答问题、制定计划
-- **本地文件操作**：可读取、修改本地文件/文件夹，直接解决文件相关问题
-- **代码开发**：支持代码编写、分析与重构
-- **设计创意**：支持设计类任务的辅助
-- **远程联动**：与小程序 / App 联动，可在手机上远程下达任务
-- **技能生态**：支持导入和调用外部技能（兼容 OpenClaw 全量 Skills）
-- **办公自动化**：预置 20+ 种办公技能，如文档处理、数据分析、图像生成等
-- **IM 集成（Claw）**：可绑定企业微信、飞书、钉钉、QQ 等，实现远程指令交互
+| 组件 | 来源 | 作用 |
+| --- | --- | --- |
+| `app.asar` + `app.asar.unpacked` | 官方 **Windows** 安装包 | 应用 JS 层、UI、内置插件、CLI 代理 |
+| Electron **39.2.7** Linux x64 运行时 | Electron 官方/镜像下载 | Chromium 运行时、主进程二进制（ELF） |
+| 顶层资源（`*.pak`/`icudtl.dat`/`snapshot_blob.bin`） | Windows 安装包 | Chromium 资源文件（跨平台共用） |
+| Linux 原生 `.node`/`.so` 模块 | Windows 包内置 + 重编译 | 终端、koffi、sqlite 等原生能力 |
 
-### 移植版特点
+### 已落地的关键修复
 
-1. 使用 Electron `v39.2.7`
-2. 支持 `amd64`、`arm64` 及龙架构
-3. 使用系统自带的 Python 与 Git
-4. 仅支持 `glibc > 2.28` 的发行版
-5. 如需导入读取本地文件、导入/应用外部技能，请关闭沙箱安全与内置运行时
+1. **Electron 版本锁定 39.2.7**：Windows 包内置 Linux 原生模块的 ABI 与 Electron 39 对齐；若误用 37 会导致 `better-sqlite3` ABI 不匹配、daemon 子进程崩溃、页面空白。
+2. **重编译 `better-sqlite3@12.8.0`**：target=39.2.7，覆盖 `app.asar.unpacked` 内的 `.node`，并补齐 `bindings` / `file-uri-to-path`。
+3. **标题栏自绘**：`--title-bar-style=custom` + main.js `titleBarOverlay` 守卫，避免 Linux 下标题栏白块/丢失。
+4. **沙箱回退**：无 root 或 `chrome-sandbox` 未 setuid 时，启动脚本自动追加 `--no-sandbox`。
+5. **补齐运行时依赖**：复制 `chrome_crashpad_handler` 避免启动 FATAL，`ulimit -n 65535` 提高文件描述符上限。
+6. **Windows/macOS 专属模块安全降级**：`qimei-node` / `turing-sdk` / `wechat-copydata-decoder` 等按代码逻辑降级，不影响主流程。
+
+### 安装与运行
+
+```bash
+sudo dpkg -i com.xydw.workbuddy_*.deb
+sudo apt-get install -f   # 若提示缺少运行时依赖，自动补齐
+```
+
+- 应用菜单搜索 **WorkBuddy** 并点击；
+- 或终端执行 `workbuddy`（软链至 `/usr/bin/workbuddy`，指向 `/opt/workbuddy/workbuddy`）。
+
+### 版本历史
+
+| 版本 | 安装包 | 下载地址 |
+| --- | --- | --- |
+| `5.4.7-8` | `com.xydw.workbuddy_5.4.7-8_amd64.deb` | <https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-8/com.xydw.workbuddy_5.4.7-8_amd64.deb> |
+| `5.4.7-10` | `com.xydw.workbuddy_5.4.7-10_amd64.deb` | <https://github.com/testerxydw/workbuddy-linux/releases/download/v5.4.7-10/com.xydw.workbuddy_5.4.7-10_amd64.deb> |
 
 ---
 
